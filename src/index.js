@@ -24,11 +24,11 @@ var config = {
 };
 
 let player_1;
-let p1_fly_counter;
 let player_2;
+let arrows;
+let arrow_count = 0;
 let platforms;
 let cursors;
-let arrows;
 
 const game = new Phaser.Game(config);
 
@@ -51,9 +51,6 @@ function create() {
 
 
   platforms = this.physics.add.staticGroup();
-
-
-  console.log(player_1)
 
   //player start platforms
   platforms.create(100, 400, 'large_ground');
@@ -111,9 +108,11 @@ function create() {
   this.physics.add.collider(player_1, platforms);
   this.physics.add.collider(player_2, platforms);
   this.physics.add.collider(player_1, player_2);
-  this.physics.add.collider(arrows, platforms);
   // this.physics.add.collider(arrows, player_1);
-  // this.physics.add.collider(arrows, player_2);
+  this.physics.add.collider(arrows, platforms);
+  this.physics.add.overlap(player_2, arrows, killPlayer, null, this);
+
+  player_2.health = 3;
 }
 
 function update() {
@@ -123,6 +122,7 @@ function update() {
   player_2.flipX = true;
   // console.log(player_1.body.touching.down)
   //Player 1 move controls
+  arrow_count++
   if (cursors.right.isDown && player_1.body.touching.down) {
     player_1.setVelocityX(160);
     player_1.anims.play('walk', true);
@@ -142,10 +142,13 @@ function update() {
     player_1.setVelocityX(-160);
     player_1.anims.play('mid-air', true);
     player_1.flipX = true
-  } else if (player_1.body.touching.down && cursors.space.isDown) {
+  } else if (cursors.space.isDown) {
     player_1.setVelocityX(0);
     player_1.anims.play('shoot', true);
-    fireArrow();
+    if (arrow_count > 20) {
+      fireArrow();
+      arrow_count = 0;
+    }
   } else if (player_1.body.touching.down) {
     player_1.setVelocityX(0);
     player_1.anims.play('stand', true);
@@ -184,14 +187,23 @@ function update() {
 }
 
 function fireArrow() {
-  if(player_1.flipX ){
-    arrows.create(player_1.x, player_1.y, 'arrow').setScale(3);
-    arrows.setVelocityX(-600);
-    arrows.flipX = true;
+  if (player_1.flipX) {
+    let arrow = arrows.create(player_1.x - 16, player_1.y, 'arrow').setScale(3);
+    arrow.setVelocityX(-600);
+    arrow.flipX = true;
+    arrow.setBounceY(0.8);
   } else {
-    arrows.create(player_1.x, player_1.y, 'arrow').setScale(3);
-    arrows.setVelocityX(600);
-    arrows.flipX = false;
+    let arrow = arrows.create(player_1.x + 16, player_1.y, 'arrow').setScale(3);
+    arrow.setVelocityX(600);
+    arrow.flipX = false;
+    arrow.setBounceY(0.8);
   }
-    
+}
+
+function killPlayer(player_2, arrow){
+  arrow.disableBody(true, true);
+  player_2.health--
+  if(player_2.health <= 0 ){
+    player_2.disableBody(true, true);
+  }
 }
