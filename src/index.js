@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import logoImg from "./assets/logo.png";
 import player from './assets/player/moving/pit_move.png';
 import largeGround from './assets/world/ground-large.png';
 import smallGround from './assets/world/ground-small.png';
@@ -25,10 +24,11 @@ var config = {
 };
 
 let player_1;
-let p1_fly_counter = false;
+let p1_fly_counter;
 let player_2;
 let platforms;
 let cursors;
+let arrows;
 
 const game = new Phaser.Game(config);
 
@@ -37,21 +37,23 @@ function preload() {
   this.load.image('large_ground', largeGround);
   this.load.image('small_ground', smallGround);
   this.load.image('arrow', arrow)
-
-  // this.load.image("logo", logoImg);
 }
 
 function create() {
   cursors = this.input.keyboard.createCursorKeys();
-  // const logo = this.add.image(400, 150, "logo");
 
   player_1 = this.physics.add.sprite(100, 300, 'pit_move').setScale(2);
   player_2 = this.physics.add.sprite(700, 300, 'pit_move').setScale(2);
+  arrows = this.physics.add.group();
 
   player_1.setCollideWorldBounds(true);
   player_2.setCollideWorldBounds(true);
 
+
   platforms = this.physics.add.staticGroup();
+
+
+  console.log(player_1)
 
   //player start platforms
   platforms.create(100, 400, 'large_ground');
@@ -63,9 +65,9 @@ function create() {
   }
 
   //generate random platforms
-  for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
-    platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
-  }
+  // for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
+  //   platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
+  // }
 
   // platforms.create(50, 250, 'large_ground');
   // platforms.create(750, 220, 'large_ground');
@@ -109,6 +111,9 @@ function create() {
   this.physics.add.collider(player_1, platforms);
   this.physics.add.collider(player_2, platforms);
   this.physics.add.collider(player_1, player_2);
+  this.physics.add.collider(arrows, platforms);
+  // this.physics.add.collider(arrows, player_1);
+  // this.physics.add.collider(arrows, player_2);
 }
 
 function update() {
@@ -140,7 +145,7 @@ function update() {
   } else if (player_1.body.touching.down && cursors.space.isDown) {
     player_1.setVelocityX(0);
     player_1.anims.play('shoot', true);
-
+    fireArrow();
   } else if (player_1.body.touching.down) {
     player_1.setVelocityX(0);
     player_1.anims.play('stand', true);
@@ -176,4 +181,17 @@ function update() {
   // player_2.setVelocityX(0);
   //   player_2.anims.play('mid-air', true);
   // }
+}
+
+function fireArrow() {
+  if(player_1.flipX ){
+    arrows.create(player_1.x, player_1.y, 'arrow').setScale(3);
+    arrows.setVelocityX(-600);
+    arrows.flipX = true;
+  } else {
+    arrows.create(player_1.x, player_1.y, 'arrow').setScale(3);
+    arrows.setVelocityX(600);
+    arrows.flipX = false;
+  }
+    
 }
