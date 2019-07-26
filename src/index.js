@@ -62,9 +62,9 @@ function create() {
   }
 
   //generate random platforms
-  // for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
-  //   platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
-  // }
+  for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
+    platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
+  }
 
   // platforms.create(50, 250, 'large_ground');
   // platforms.create(750, 220, 'large_ground');
@@ -122,7 +122,9 @@ function update() {
   player_2.flipX = true;
   // console.log(player_1.body.touching.down)
   //Player 1 move controls
+  //The counter for how much time between arrows.
   arrow_count++
+  
   if (cursors.right.isDown && player_1.body.touching.down) {
     player_1.setVelocityX(160);
     player_1.anims.play('walk', true);
@@ -190,13 +192,15 @@ function fireArrow() {
   if (player_1.flipX) {
     let arrow = arrows.create(player_1.x - 16, player_1.y, 'arrow').setScale(3);
     arrow.setVelocityX(-600);
+    arrow.body.setAllowGravity(false);
     arrow.flipX = true;
-    arrow.setBounceY(0.8);
+    arrow.setBounceY(0.06);
   } else {
     let arrow = arrows.create(player_1.x + 16, player_1.y, 'arrow').setScale(3);
     arrow.setVelocityX(600);
+    arrow.body.setAllowGravity(false);
     arrow.flipX = false;
-    arrow.setBounceY(0.8);
+    arrow.setBounceY(0.06);
   }
 }
 
