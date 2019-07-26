@@ -24,11 +24,14 @@ var config = {
 };
 
 let player_1;
+let cursors_p1;
 let player_2;
-let arrows;
-let arrow_count = 0;
+let cursors_p2;
+let p1_arrows;
+let p2_arrows;
+let p1_arrow_count = 0;
+let p2_arrow_count = 0;
 let platforms;
-let cursors;
 
 const game = new Phaser.Game(config);
 
@@ -40,11 +43,17 @@ function preload() {
 }
 
 function create() {
-  cursors = this.input.keyboard.createCursorKeys();
+  cursors_p1 = this.input.keyboard.addKeys('W,S,A,D,G');
+  cursors_p2 = this.input.keyboard.createCursorKeys();
+
 
   player_1 = this.physics.add.sprite(100, 300, 'pit_move').setScale(2);
   player_2 = this.physics.add.sprite(700, 300, 'pit_move').setScale(2);
-  arrows = this.physics.add.group();
+  player_1.flipX
+  //Start game with x flipped
+  player_2.flipX = true
+  p1_arrows = this.physics.add.group();
+  p2_arrows = this.physics.add.group();
 
   player_1.setCollideWorldBounds(true);
   player_2.setCollideWorldBounds(true);
@@ -109,47 +118,51 @@ function create() {
   this.physics.add.collider(player_2, platforms);
   this.physics.add.collider(player_1, player_2);
   // this.physics.add.collider(arrows, player_1);
-  this.physics.add.collider(arrows, platforms);
-  this.physics.add.overlap(player_2, arrows, killPlayer, null, this);
+  this.physics.add.collider(p1_arrows, platforms);
+  this.physics.add.collider(p2_arrows, platforms);
 
+  this.physics.add.overlap(player_2, p1_arrows, killPlayer);
+  this.physics.add.overlap(player_1, p2_arrows, killPlayer);
+
+  player_1.health = 3;
   player_2.health = 3;
 }
 
 function update() {
 
-  player_1.flipX
-  //We'll have to change this later
-  player_2.flipX = true;
   // console.log(player_1.body.touching.down)
-  //Player 1 move controls
+
   //The counter for how much time between arrows.
-  arrow_count++
-  
-  if (cursors.right.isDown && player_1.body.touching.down) {
+  p1_arrow_count++
+  p2_arrow_count++
+
+  //Player 1 move controls
+  if (cursors_p1.D.isDown && player_1.body.touching.down) {
     player_1.setVelocityX(160);
     player_1.anims.play('walk', true);
     player_1.flipX = false
-  } else if (cursors.left.isDown && player_1.body.touching.down) {
+  } else if (cursors_p1.A.isDown && player_1.body.touching.down) {
     player_1.setVelocityX(-160);
     player_1.anims.play('walk', true);
     player_1.flipX = true
-  } else if (cursors.up.isDown) {
+  } else if (cursors_p1.W.isDown) {
     player_1.anims.play('fly', true);
     player_1.setVelocityY(-230);
-  } else if (cursors.right.isDown && !player_1.body.touching.down) {
+  } else if (cursors_p1.D.isDown && !player_1.body.touching.down) {
     player_1.setVelocityX(160);
     player_1.anims.play('mid-air', true);
     player_1.flipX = false
-  } else if (cursors.left.isDown && !player_1.body.touching.down) {
+  } else if (cursors_p1.A.isDown && !player_1.body.touching.down) {
     player_1.setVelocityX(-160);
     player_1.anims.play('mid-air', true);
     player_1.flipX = true
-  } else if (cursors.space.isDown) {
+  } else if (cursors_p1.G.isDown) {
     player_1.setVelocityX(0);
     player_1.anims.play('shoot', true);
-    if (arrow_count > 20) {
-      fireArrow();
-      arrow_count = 0;
+    if (p1_arrow_count > 30) {
+      player_1.anims.play('stand', true);
+      fireArrow(player_1, 'player_1');
+      p1_arrow_count = 0;
     }
   } else if (player_1.body.touching.down) {
     player_1.setVelocityX(0);
@@ -159,55 +172,80 @@ function update() {
     player_1.anims.play('mid-air', true);
   }
 
-  //player 2 move controls
-  // if (cursors.right.isDown && player_2.body.touching.down) {
-  //   player_2.setVelocityX(160);
-  //   player_2.anims.play('walk', true);
-  //   player_2.flipX = false
-  // } else if (cursors.left.isDown && player_2.body.touching.down) {
-  //   player_2.setVelocityX(-160);
-  //   player_2.anims.play('walk', true);
-  //   player_2.flipX = true
-  // } else if (cursors.up.isDown) {
-  //   player_2.anims.play('fly', true);
-  //   player_2.setVelocityY(-230);
-  // } else if (cursors.right.isDown && !player_2.body.touching.down) {
-  //   player_2.setVelocityX(160);
-  //   player_2.anims.play('mid-air', true);
-  //   player_2.flipX = false
-  // } else if (cursors.left.isDown && !player_2.body.touching.down) {
-  //   player_2.setVelocityX(-160);
-  //   player_2.anims.play('mid-air', true);
-  //   player_2.flipX = true
-  // } else if(player_2.body.touching.down){
-  //   player_2.setVelocityX(0);
-  //   player_2.anims.play('stand', true);
-  // } else {
-  // player_2.setVelocityX(0);
-  //   player_2.anims.play('mid-air', true);
-  // }
-}
-
-function fireArrow() {
-  if (player_1.flipX) {
-    let arrow = arrows.create(player_1.x - 16, player_1.y, 'arrow').setScale(3);
-    arrow.setVelocityX(-600);
-    arrow.body.setAllowGravity(false);
-    arrow.flipX = true;
-    arrow.setBounceY(0.06);
+  // player 2 move controls
+  if (cursors_p2.right.isDown && player_2.body.touching.down) {
+    player_2.setVelocityX(160);
+    player_2.anims.play('walk', true);
+    player_2.flipX = false
+  } else if (cursors_p2.left.isDown && player_2.body.touching.down) {
+    player_2.setVelocityX(-160);
+    player_2.anims.play('walk', true);
+    player_2.flipX = true
+  } else if (cursors_p2.up.isDown) {
+    player_2.anims.play('fly', true);
+    player_2.setVelocityY(-230);
+  } else if (cursors_p2.right.isDown && !player_2.body.touching.down) {
+    player_2.setVelocityX(160);
+    player_2.anims.play('mid-air', true);
+    player_2.flipX = false
+  } else if (cursors_p2.left.isDown && !player_2.body.touching.down) {
+    player_2.setVelocityX(-160);
+    player_2.anims.play('mid-air', true);
+    player_2.flipX = true
+  } else if (cursors_p2.space.isDown) {
+    player_2.setVelocityX(0);
+    player_2.anims.play('shoot', true);
+    if (p2_arrow_count > 30) {
+      player_2.anims.play('stand', true);
+      fireArrow(player_2, 'player_2');
+      p2_arrow_count = 0;
+    }
+  } else if (player_2.body.touching.down) {
+    player_2.setVelocityX(0);
+    player_2.anims.play('stand', true);
   } else {
-    let arrow = arrows.create(player_1.x + 16, player_1.y, 'arrow').setScale(3);
-    arrow.setVelocityX(600);
-    arrow.body.setAllowGravity(false);
-    arrow.flipX = false;
-    arrow.setBounceY(0.06);
+    player_2.setVelocityX(0);
+    player_2.anims.play('mid-air', true);
   }
+
+  function fireArrow(player, who) {
+    if (who === "player_1") {
+      if (player.flipX) {
+        let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
+        arrow.setVelocityX(-600);
+        arrow.body.setAllowDrag(false);
+        arrow.flipX = true;
+        arrow.setBounceY(0.06);
+      } else {
+        let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
+        arrow.setVelocityX(600);
+        arrow.body.setAllowDrag(false);
+        arrow.flipX = false;
+        arrow.setBounceY(0.06);
+      }
+    } else {
+      if (player.flipX) {
+        let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
+        arrow.setVelocityX(-600);
+        arrow.body.setAllowDrag(false);
+        arrow.flipX = true;
+        arrow.setBounceY(0.06);
+      } else {
+        let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
+        arrow.setVelocityX(600);
+        arrow.body.setAllowDrag(false);
+        arrow.flipX = false;
+        arrow.setBounceY(0.06);
+      }
+    }
+  }
+
 }
 
-function killPlayer(player_2, arrow){
+function killPlayer(player, arrow) {
   arrow.disableBody(true, true);
-  player_2.health--
-  if(player_2.health <= 0 ){
-    player_2.disableBody(true, true);
+  player.health--
+  if (player.health <= 0) {
+    player.disableBody(true, true);
   }
 }
