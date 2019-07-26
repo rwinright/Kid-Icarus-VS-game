@@ -52,6 +52,8 @@ function create() {
   player_1.flipX
   //Start game with x flipped
   player_2.flipX = true
+
+  console.log(player_1);
   p1_arrows = this.physics.add.group();
   p2_arrows = this.physics.add.group();
 
@@ -209,33 +211,35 @@ function update() {
   }
 
   function fireArrow(player, who) {
-    if (who === "player_1") {
-      if (player.flipX) {
-        let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
-        arrow.setVelocityX(-600);
-        arrow.body.setAllowDrag(false);
-        arrow.flipX = true;
-        arrow.setBounceY(0.06);
+    if (player.active) {
+      if (who === "player_1") {
+        if (player.flipX) {
+          let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
+          arrow.setVelocityX(-600);
+          arrow.body.setAllowDrag(false);
+          arrow.flipX = true;
+          arrow.setBounceY(0.06);
+        } else {
+          let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
+          arrow.setVelocityX(600);
+          arrow.body.setAllowDrag(false);
+          arrow.flipX = false;
+          arrow.setBounceY(0.06);
+        }
       } else {
-        let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
-        arrow.setVelocityX(600);
-        arrow.body.setAllowDrag(false);
-        arrow.flipX = false;
-        arrow.setBounceY(0.06);
-      }
-    } else {
-      if (player.flipX) {
-        let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
-        arrow.setVelocityX(-600);
-        arrow.body.setAllowDrag(false);
-        arrow.flipX = true;
-        arrow.setBounceY(0.06);
-      } else {
-        let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
-        arrow.setVelocityX(600);
-        arrow.body.setAllowDrag(false);
-        arrow.flipX = false;
-        arrow.setBounceY(0.06);
+        if (player.flipX) {
+          let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
+          arrow.setVelocityX(-600);
+          arrow.body.setAllowDrag(false);
+          arrow.flipX = true;
+          arrow.setBounceY(0.06);
+        } else {
+          let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
+          arrow.setVelocityX(600);
+          arrow.body.setAllowDrag(false);
+          arrow.flipX = false;
+          arrow.setBounceY(0.06);
+        }
       }
     }
   }
