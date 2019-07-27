@@ -130,7 +130,7 @@ function create() {
   //arrow platform collision
   this.physics.add.overlap(p1_arrows, platforms, destroyArrow);
   this.physics.add.overlap(p2_arrows, platforms, destroyArrow);
-
+  
   player_1.health = 3;
   player_2.health = 3;
 
@@ -265,6 +265,6 @@ function killPlayer(player, arrow) {
   }
 }
 
-function destroyArrow(arrow, platform) {
+function destroyArrow(arrow) {
   arrow.destroy();
 }
