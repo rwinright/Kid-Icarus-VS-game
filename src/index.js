@@ -136,13 +136,13 @@ function create() {
 
   p1_health = this.add.text(10, 10, `Player 1: ${player_1.health}`);
   p2_health = this.add.text(10, 30, `Player 2: ${player_2.health}`);
-  
+
 }
 
 function update() {
 
   //Render health count on screen. 
-  
+
   //The counter for how much time between arrows.
   p1_arrow_count++
   p2_arrow_count++
@@ -225,13 +225,13 @@ function update() {
         if (player.flipX) {
           let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
           arrow.setVelocityX(-600);
-          arrow.body.setAllowDrag(false);
+          arrow.body.setAllowGravity(false);
           arrow.flipX = true;
           arrow.setBounceY(0.06);
         } else {
           let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
           arrow.setVelocityX(600);
-          arrow.body.setAllowDrag(false);
+          arrow.body.setAllowGravity(false);
           arrow.flipX = false;
           arrow.setBounceY(0.06);
         }
@@ -265,6 +265,6 @@ function killPlayer(player, arrow) {
   }
 }
 
-function destroyArrow(arrow, platform){
+function destroyArrow(arrow, platform) {
   arrow.destroy();
 }
