@@ -24,6 +24,8 @@ var config = {
 };
 
 let player_1;
+let p1_health;
+let p2_health;
 let cursors_p1;
 let player_2;
 let cursors_p2;
@@ -53,7 +55,6 @@ function create() {
   //Start game with x flipped
   player_2.flipX = true
 
-  console.log(player_1);
   p1_arrows = this.physics.add.group();
   p2_arrows = this.physics.add.group();
 
@@ -120,20 +121,28 @@ function create() {
   this.physics.add.collider(player_2, platforms);
   this.physics.add.collider(player_1, player_2);
   // this.physics.add.collider(arrows, player_1);
-  this.physics.add.collider(p1_arrows, platforms);
-  this.physics.add.collider(p2_arrows, platforms);
+  // this.physics.add.collider(p1_arrows, platforms);
+  // this.physics.add.collider(p2_arrows, platforms);
 
+  //arrow health collisions
   this.physics.add.overlap(player_2, p1_arrows, killPlayer);
   this.physics.add.overlap(player_1, p2_arrows, killPlayer);
+  //arrow platform collision
+  this.physics.add.overlap(p1_arrows, platforms, destroyArrow);
+  this.physics.add.overlap(p2_arrows, platforms, destroyArrow);
 
   player_1.health = 3;
   player_2.health = 3;
+
+  p1_health = this.add.text(10, 10, `Player 1: ${player_1.health}`);
+  p2_health = this.add.text(10, 30, `Player 2: ${player_2.health}`);
+  
 }
 
 function update() {
 
-  // console.log(player_1.body.touching.down)
-
+  //Render health count on screen. 
+  
   //The counter for how much time between arrows.
   p1_arrow_count++
   p2_arrow_count++
@@ -230,13 +239,13 @@ function update() {
         if (player.flipX) {
           let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
           arrow.setVelocityX(-600);
-          arrow.body.setAllowDrag(false);
+          arrow.body.setAllowGravity(false);
           arrow.flipX = true;
           arrow.setBounceY(0.06);
         } else {
           let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
           arrow.setVelocityX(600);
-          arrow.body.setAllowDrag(false);
+          arrow.body.setAllowGravity(false);
           arrow.flipX = false;
           arrow.setBounceY(0.06);
         }
@@ -249,7 +258,13 @@ function update() {
 function killPlayer(player, arrow) {
   arrow.disableBody(true, true);
   player.health--
+  p1_health.setText(`Player 1: ${player_1.health}`);
+  p2_health.setText(`Player 2: ${player_2.health}`);
   if (player.health <= 0) {
     player.disableBody(true, true);
   }
+}
+
+function destroyArrow(arrow, platform){
+  arrow.destroy();
 }
