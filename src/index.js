@@ -12,7 +12,7 @@ var config = {
     default: 'arcade',
     arcade: {
       gravity: { y: 300 },
-      debug: false
+      debug: true
     }
   },
   scene: {
@@ -53,8 +53,8 @@ function create() {
 
   camera = this.cameras.main;
 
-  player_1 = this.physics.add.sprite(100, 300, 'pit_move').setScale(2);
-  player_2 = this.physics.add.sprite(700, 300, 'pit_move').setScale(2);
+  player_1 = this.physics.add.sprite(100, 300, 'pit_move').setScale(2).setSize(9, 24).setOffset(4.5, 0);
+  player_2 = this.physics.add.sprite(700, 300, 'pit_move').setScale(2).setSize(9, 24).setOffset(4.5, 0);
   player_1.flipX
   //Start game with x flipped
   player_2.flipX = true
@@ -124,9 +124,6 @@ function create() {
   this.physics.add.collider(player_1, platforms);
   this.physics.add.collider(player_2, platforms);
   this.physics.add.collider(player_1, player_2);
-  // this.physics.add.collider(arrows, player_1);
-  // this.physics.add.collider(p1_arrows, platforms);
-  // this.physics.add.collider(p2_arrows, platforms);
 
   //arrow health collisions
   this.physics.add.overlap(player_2, p1_arrows, killPlayer);
@@ -229,13 +226,15 @@ function update() {
     if (player.active) {
       if (who === "player_1") {
         if (player.flipX) {
-          let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
+          let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
+          console.log(arrow)
           arrow.setVelocityX(-600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = true;
           arrow.setBounceY(0.06);
         } else {
-          let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
+          let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
+          console.log(arrow)
           arrow.setVelocityX(600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = false;
@@ -243,13 +242,15 @@ function update() {
         }
       } else {
         if (player.flipX) {
-          let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3);
+          let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
+          console.log(arrow)
           arrow.setVelocityX(-600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = true;
           arrow.setBounceY(0.06);
         } else {
-          let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3);
+          let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
+          console.log(arrow)
           arrow.setVelocityX(600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = false;
@@ -264,9 +265,7 @@ function update() {
 function killPlayer(player, arrow) {
   arrow.disableBody(true, true);
   player.health--;
-
   camera.shake(250, 0.008);
-  console.log(camera.shake)
   p1_health.setText(`Player 1: ${player_1.health}`);
   p2_health.setText(`Player 2: ${player_2.health}`);
   if (player.health <= 0) {
