@@ -1,12 +1,8 @@
-// import Phaser from "phaser";p
-// import player from './assets/player/moving/pit_move.png';
-const player = require('./assets/player/moving/pit_move.png');
-// import largeGround from './assets/world/ground-large.png';
-const largeGround = require('./assets/world/ground-large.png')
-// import smallGround from './assets/world/ground-small.png';
-const smallGround = require('./assets/world/ground-small.png');
-// import arrow from './assets/player/projectile/arrow.png';
-const arrow = require('./assets/player/projectile/arrow.png');
+import Phaser from "phaser";
+import player from './assets/player/moving/pit_move.png';
+import largeGround from './assets/world/ground-large.png';
+import smallGround from './assets/world/ground-small.png';
+import arrow from './assets/player/projectile/arrow.png';
 
 var config = {
   type: Phaser.AUTO,
