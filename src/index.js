@@ -34,6 +34,7 @@ let p2_arrows;
 let p1_arrow_count = 0;
 let p2_arrow_count = 0;
 let platforms;
+let camera;
 
 const game = new Phaser.Game(config);
 
@@ -48,6 +49,7 @@ function create() {
   cursors_p1 = this.input.keyboard.addKeys('W,S,A,D,G');
   cursors_p2 = this.input.keyboard.createCursorKeys();
 
+  camera = this.cameras.main;
 
   player_1 = this.physics.add.sprite(100, 300, 'pit_move').setScale(2);
   player_2 = this.physics.add.sprite(700, 300, 'pit_move').setScale(2);
@@ -74,9 +76,9 @@ function create() {
   }
 
   //generate random platforms
-  for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
-    platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
-  }
+  // for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
+  //   platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
+  // }
 
   // platforms.create(50, 250, 'large_ground');
   // platforms.create(750, 220, 'large_ground');
@@ -257,7 +259,10 @@ function update() {
 
 function killPlayer(player, arrow) {
   arrow.disableBody(true, true);
-  player.health--
+  player.health--;
+
+  camera.shake(250, 0.008);
+  console.log(camera.shake)
   p1_health.setText(`Player 1: ${player_1.health}`);
   p2_health.setText(`Player 2: ${player_2.health}`);
   if (player.health <= 0) {
