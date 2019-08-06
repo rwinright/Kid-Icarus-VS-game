@@ -29,6 +29,7 @@ let p2_health;
 let cursors_p1;
 let player_2;
 let cursors_p2;
+let reset_button;
 let p1_arrows;
 let p2_arrows;
 let p1_arrow_count = 0;
@@ -48,6 +49,7 @@ function preload() {
 function create() {
   cursors_p1 = this.input.keyboard.addKeys('W,S,A,D,G');
   cursors_p2 = this.input.keyboard.createCursorKeys();
+  reset_button = this.input.keyboard.addKeys('R');
 
   camera = this.cameras.main;
 
@@ -143,8 +145,10 @@ function create() {
 
 function update() {
 
-  //Render health count on screen. 
-
+  //Reset game on R
+  if(reset_button.R.isDown){
+    this.scene.restart();
+  }
   //The counter for how much time between arrows.
   p1_arrow_count++
   p2_arrow_count++
