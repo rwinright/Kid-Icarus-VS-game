@@ -1,4 +1,4 @@
-import Phaser from "../node_modules/phaser/dist/phaser";
+import Phaser from "phaser";
 import player from './assets/player/moving/pit_move.png';
 import largeGround from './assets/world/ground-large.png';
 import smallGround from './assets/world/ground-small.png';
