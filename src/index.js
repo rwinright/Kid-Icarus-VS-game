@@ -77,10 +77,10 @@ function create() {
     platforms.create(i, 600, 'large_ground');
   }
 
-  //generate random platforms
-  // for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
-  //   platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
-  // }
+  // generate random platforms
+  for (let i = 0; i < Math.floor(Math.random() * 40); i++) {
+    platforms.create(Math.floor(Math.random() * 100) * 10, Math.floor(Math.random() * 40) * 10, 'large_ground');
+  }
 
   // platforms.create(50, 250, 'large_ground');
   // platforms.create(750, 220, 'large_ground');
@@ -227,14 +227,12 @@ function update() {
       if (who === "player_1") {
         if (player.flipX) {
           let arrow = p1_arrows.create(player.x - 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
-          console.log(arrow)
           arrow.setVelocityX(-600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = true;
           arrow.setBounceY(0.06);
         } else {
           let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
-          console.log(arrow)
           arrow.setVelocityX(600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = false;
@@ -243,14 +241,12 @@ function update() {
       } else {
         if (player.flipX) {
           let arrow = p2_arrows.create(player.x - 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
-          console.log(arrow)
           arrow.setVelocityX(-600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = true;
           arrow.setBounceY(0.06);
         } else {
           let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
-          console.log(arrow)
           arrow.setVelocityX(600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = false;
