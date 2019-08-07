@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import player from './assets/player/moving/pit_move.png';
+import player1 from './assets/player/moving/pit_move.png';
+import player2 from './assets/player/moving/dark_pit_move.png';
 import largeGround from './assets/world/ground-large.png';
 import smallGround from './assets/world/ground-small.png';
 import arrow from './assets/player/projectile/arrow.png';
@@ -40,7 +41,8 @@ let camera;
 const game = new Phaser.Game(config);
 
 function preload() {
-  this.load.spritesheet('pit_move', player, { frameWidth: 16, frameHeight: 24 });
+  this.load.spritesheet('pit_move', player1, { frameWidth: 16, frameHeight: 24 });
+  this.load.spritesheet('dark_pit_move', player2, { frameWidth: 16, frameHeight: 24 });
   this.load.image('large_ground', largeGround);
   this.load.image('small_ground', smallGround);
   this.load.image('arrow', arrow)
@@ -54,7 +56,7 @@ function create() {
   camera = this.cameras.main;
 
   player_1 = this.physics.add.sprite(100, 300, 'pit_move').setScale(2).setSize(9, 24).setOffset(4.5, 0);
-  player_2 = this.physics.add.sprite(700, 300, 'pit_move').setScale(2).setSize(9, 24).setOffset(4.5, 0);
+  player_2 = this.physics.add.sprite(700, 300, 'dark_pit_move').setScale(2).setSize(9, 24).setOffset(4.5, 0);
   player_1.flipX
   //Start game with x flipped
   player_2.flipX = true
@@ -85,38 +87,74 @@ function create() {
   // platforms.create(50, 250, 'large_ground');
   // platforms.create(750, 220, 'large_ground');
 
-
+  //p1 anims
   this.anims.create({
-    key: 'stand',
+    key: 'p1stand',
     frames: this.anims.generateFrameNumbers('pit_move', { start: 1, end: 1 }),
     frameRate: 12,
     repeat: -1
   });
 
   this.anims.create({
-    key: 'fly',
+    key: 'p1fly',
     frames: this.anims.generateFrameNumbers('pit_move', { start: 3, end: 4 }),
     frameRate: 8,
     repeat: -1
   });
 
   this.anims.create({
-    key: 'mid-air',
+    key: 'p1mid-air',
     frames: this.anims.generateFrameNumbers('pit_move', { start: 3, end: 4 }),
     frameRate: 8,
     repeat: -1
   });
 
   this.anims.create({
-    key: 'walk',
+    key: 'p1walk',
     frames: this.anims.generateFrameNumbers('pit_move', { start: 1, end: 3 }),
     frameRate: 12,
     repeat: -1
   });
 
   this.anims.create({
-    key: 'shoot',
+    key: 'p1shoot',
     frames: this.anims.generateFrameNumbers('pit_move', { start: 0, end: 1 }),
+    frameRate: 0,
+    repeat: 1
+  });
+
+  //p2 anims
+  this.anims.create({
+    key: 'p2stand',
+    frames: this.anims.generateFrameNumbers('dark_pit_move', { start: 1, end: 1 }),
+    frameRate: 12,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'p2fly',
+    frames: this.anims.generateFrameNumbers('dark_pit_move', { start: 3, end: 4 }),
+    frameRate: 8,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'p2mid-air',
+    frames: this.anims.generateFrameNumbers('dark_pit_move', { start: 3, end: 4 }),
+    frameRate: 8,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'p2walk',
+    frames: this.anims.generateFrameNumbers('dark_pit_move', { start: 1, end: 3 }),
+    frameRate: 12,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'p2shoot',
+    frames: this.anims.generateFrameNumbers('dark_pit_move', { start: 0, end: 1 }),
     frameRate: 0,
     repeat: 1
   });
@@ -153,73 +191,73 @@ function update() {
   //Player 1 move controls
   if (cursors_p1.D.isDown && player_1.body.touching.down) {
     player_1.setVelocityX(160);
-    player_1.anims.play('walk', true);
+    player_1.anims.play('p1walk', true);
     player_1.flipX = false
   } else if (cursors_p1.A.isDown && player_1.body.touching.down) {
     player_1.setVelocityX(-160);
-    player_1.anims.play('walk', true);
+    player_1.anims.play('p1walk', true);
     player_1.flipX = true
   } else if (cursors_p1.W.isDown) {
-    player_1.anims.play('fly', true);
+    player_1.anims.play('p1fly', true);
     player_1.setVelocityY(-230);
   } else if (cursors_p1.D.isDown && !player_1.body.touching.down) {
     player_1.setVelocityX(160);
-    player_1.anims.play('mid-air', true);
+    player_1.anims.play('p1mid-air', true);
     player_1.flipX = false
   } else if (cursors_p1.A.isDown && !player_1.body.touching.down) {
     player_1.setVelocityX(-160);
-    player_1.anims.play('mid-air', true);
+    player_1.anims.play('p1mid-air', true);
     player_1.flipX = true
   } else if (cursors_p1.G.isDown) {
     player_1.setVelocityX(0);
-    player_1.anims.play('shoot', true);
+    player_1.anims.play('p1shoot', true);
     if (p1_arrow_count > 30) {
-      player_1.anims.play('stand', true);
+      player_1.anims.play('p1stand', true);
       fireArrow(player_1, 'player_1');
       p1_arrow_count = 0;
     }
   } else if (player_1.body.touching.down) {
     player_1.setVelocityX(0);
-    player_1.anims.play('stand', true);
+    player_1.anims.play('p1stand', true);
   } else {
     player_1.setVelocityX(0);
-    player_1.anims.play('mid-air', true);
+    player_1.anims.play('p1mid-air', true);
   }
 
   // player 2 move controls
   if (cursors_p2.right.isDown && player_2.body.touching.down) {
     player_2.setVelocityX(160);
-    player_2.anims.play('walk', true);
+    player_2.anims.play('p2walk', true);
     player_2.flipX = false
   } else if (cursors_p2.left.isDown && player_2.body.touching.down) {
     player_2.setVelocityX(-160);
-    player_2.anims.play('walk', true);
+    player_2.anims.play('p2walk', true);
     player_2.flipX = true
   } else if (cursors_p2.up.isDown) {
-    player_2.anims.play('fly', true);
+    player_2.anims.play('p2fly', true);
     player_2.setVelocityY(-230);
   } else if (cursors_p2.right.isDown && !player_2.body.touching.down) {
     player_2.setVelocityX(160);
-    player_2.anims.play('mid-air', true);
+    player_2.anims.play('p2mid-air', true);
     player_2.flipX = false
   } else if (cursors_p2.left.isDown && !player_2.body.touching.down) {
     player_2.setVelocityX(-160);
-    player_2.anims.play('mid-air', true);
+    player_2.anims.play('p2mid-air', true);
     player_2.flipX = true
   } else if (cursors_p2.space.isDown) {
     player_2.setVelocityX(0);
-    player_2.anims.play('shoot', true);
+    player_2.anims.play('p2shoot', true);
     if (p2_arrow_count > 30) {
-      player_2.anims.play('stand', true);
+      player_2.anims.play('p2stand', true);
       fireArrow(player_2, 'player_2');
       p2_arrow_count = 0;
     }
   } else if (player_2.body.touching.down) {
     player_2.setVelocityX(0);
-    player_2.anims.play('stand', true);
+    player_2.anims.play('p2stand', true);
   } else {
     player_2.setVelocityX(0);
-    player_2.anims.play('mid-air', true);
+    player_2.anims.play('p2mid-air', true);
   }
 
   function fireArrow(player, who) {
