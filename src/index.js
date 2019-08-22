@@ -213,7 +213,7 @@ function update() {
     player_1.anims.play('p1shoot', true);
     if (p1_arrow_count > 30) {
       player_1.anims.play('p1stand', true);
-      fireArrow(player_1, 'player_1');
+       (player_1, 'player_1');
       p1_arrow_count = 0;
     }
   } else if (player_1.body.touching.down) {
@@ -268,13 +268,11 @@ function update() {
           arrow.setVelocityX(-600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = true;
-          arrow.setBounceY(0.06);
         } else {
           let arrow = p1_arrows.create(player.x + 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
           arrow.setVelocityX(600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = false;
-          arrow.setBounceY(0.06);
         }
       } else {
         if (player.flipX) {
@@ -282,13 +280,11 @@ function update() {
           arrow.setVelocityX(-600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = true;
-          arrow.setBounceY(0.06);
         } else {
           let arrow = p2_arrows.create(player.x + 16, player.y, 'arrow').setScale(3).setSize(8, 2).setOffset(0, 0.5);
           arrow.setVelocityX(600);
           arrow.body.setAllowGravity(false);
           arrow.flipX = false;
-          arrow.setBounceY(0.06);
         }
       }
     }
