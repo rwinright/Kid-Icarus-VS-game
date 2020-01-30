@@ -49,7 +49,7 @@ function preload() {
 }
 
 function create() {
-  cursors_p1 = this.input.keyboard.addKeys('W,S,A,D,G');
+  cursors_p1 = this.input.keyboard.addKeys('W, S, A, D, G');
   cursors_p2 = this.input.keyboard.createCursorKeys();
   reset_button = this.input.keyboard.addKeys('R');
 
@@ -183,6 +183,7 @@ function update() {
   //Reset game on R
   if(reset_button.R.isDown){
     this.scene.restart();
+    console.log(this.scene)
   }
   //The counter for how much time between arrows.
   p1_arrow_count++
@@ -213,8 +214,8 @@ function update() {
     player_1.anims.play('p1shoot', true);
     if (p1_arrow_count > 30) {
       player_1.anims.play('p1stand', true);
-       (player_1, 'player_1');
-      p1_arrow_count = 0;
+       fireArrow(player_1, 'player_1');
+        p1_arrow_count = 0;
     }
   } else if (player_1.body.touching.down) {
     player_1.setVelocityX(0);
