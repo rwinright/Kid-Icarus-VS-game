@@ -217,8 +217,6 @@ function update() {
   player_1.arrow_count++;
   player_2.arrow_count++;
 
-  console.log(player_1.arrow_count, player_2.arrow_count);
-
   let p1Movement = cursors_p1.D.isDown - cursors_p1.A.isDown;
   let p2Movement = cursors_p2.right.isDown - cursors_p2.left.isDown;
   //Player move controls;
