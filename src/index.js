@@ -284,6 +284,7 @@ function killPlayer(player, arrow) {
   }
 }
 
+//TODO: MOVEMENT STILL NEEDS MORE REFACTORING
 function movePlayer (player, playerName, moveSpeed, jumpKey, shootKey){
 
   let keyDuration = Phaser.Math.RoundTo(jumpKey.getDuration() / 60, 0);
@@ -295,7 +296,6 @@ function movePlayer (player, playerName, moveSpeed, jumpKey, shootKey){
   if (moveSpeed && player.body.touching.down) {
     player.setVelocityX(160 * moveSpeed);
     player.anims.play(`${playerName}walk`, true);
-    
   } else if (jumpKey.isDown && canFlap && keyDuration < 1) {
     player.anims.play(`${playerName}fly`, true);
     player.setVelocityY(-230);
