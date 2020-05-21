@@ -288,13 +288,17 @@ function movePlayer (player, playerName, moveSpeed, jumpKey, shootKey){
 
   let keyDuration = Phaser.Math.RoundTo(jumpKey.getDuration() / 60, 0);
 
+  let canFlap = player.body.velocity.y > -120;
+
+  // console.log(canFlap)
+
   if(moveSpeed) player.flipX = moveSpeed > 0 ? false : true;
 
   if (moveSpeed && player.body.touching.down) {
     player.setVelocityX(160 * moveSpeed);
     player.anims.play(`${playerName}walk`, true);
     
-  } else if (jumpKey.isDown && keyDuration < 1) {
+  } else if (jumpKey.isDown && canFlap && keyDuration < 1) {
     player.anims.play(`${playerName}fly`, true);
     player.setVelocityY(-230);
   } else if (moveSpeed && !player.body.touching.down) {
