@@ -30,13 +30,9 @@ let player_1,
     player_2,
     p2_health,
     cursors_p2,
-    move_speed = 160,
-    jump_speed = -230,
     reset_button,
     p1_arrows,
     p2_arrows,
-    p1_arrow_count = 0,
-    p2_arrow_count = 0,
     platforms,
     camera
 
@@ -76,6 +72,10 @@ function create() {
   player_1.flipX;
   //Start game with x flipped
   player_2.flipX = true;
+
+  //Starting counter of arrows.
+  player_1.arrow_count = 0;
+  player_2.arrow_count = 0;
 
   p1_arrows = this.physics.add.group();
   p2_arrows = this.physics.add.group();
@@ -211,18 +211,20 @@ function update() {
   //Reset game on R
   if (reset_button.R.isDown) {
     this.scene.restart();
-    console.log(this.scene);
   }
+
   //The counter for how much time between arrows.
-  p1_arrow_count++;
-  p2_arrow_count++;
+  player_1.arrow_count++;
+  player_2.arrow_count++;
+
+  console.log(player_1.arrow_count, player_2.arrow_count);
 
   let p1Movement = cursors_p1.D.isDown - cursors_p1.A.isDown;
   let p2Movement = cursors_p2.right.isDown - cursors_p2.left.isDown;
   //Player move controls;
 
-  movePlayer(player_1, "p1", p1Movement, cursors_p1.W, cursors_p1.G, p1_arrow_count);
-  movePlayer(player_2, "p2", p2Movement, cursors_p2.up, cursors_p2.space, p2_arrow_count);
+  movePlayer(player_1, "p1", p1Movement, cursors_p1.W, cursors_p1.G);
+  movePlayer(player_2, "p2", p2Movement, cursors_p2.up, cursors_p2.space);
 
 }
 
@@ -284,28 +286,29 @@ function killPlayer(player, arrow) {
   }
 }
 
-function movePlayer (player, playerName, moveSpeed, jumpKey, shootKey, arrowCount){
-  
+function movePlayer (player, playerName, moveSpeed, jumpKey, shootKey){
+
+  let keyDuration = Phaser.Math.RoundTo(jumpKey.getDuration() / 60, 0);
+
   if(moveSpeed) player.flipX = moveSpeed > 0 ? false : true;
 
   if (moveSpeed && player.body.touching.down) {
     player.setVelocityX(160 * moveSpeed);
     player.anims.play(`${playerName}walk`, true);
     
-  } else if (jumpKey.isDown) {
+  } else if (jumpKey.isDown && keyDuration < 1) {
     player.anims.play(`${playerName}fly`, true);
     player.setVelocityY(-230);
   } else if (moveSpeed && !player.body.touching.down) {
     player.setVelocityX(160 * moveSpeed);
     player.anims.play(`${playerName}mid-air`, true);
-
   } else if (shootKey.isDown) {
     player.setVelocityX(0);
     player.anims.play(`${playerName}shoot`, true);
-    if (arrowCount > 30) {
+    if (player.arrow_count > 30) {
       player.anims.play(`${playerName}stand`, true);
       fireArrow(player, playerName);
-      arrowCount = 0;
+      player.arrow_count = 0;
     }
   } else if (player.body.touching.down) {
     player.setVelocityX(0);
