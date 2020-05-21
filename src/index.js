@@ -290,8 +290,6 @@ function movePlayer (player, playerName, moveSpeed, jumpKey, shootKey){
 
   let canFlap = player.body.velocity.y > -120;
 
-  // console.log(canFlap)
-
   if(moveSpeed) player.flipX = moveSpeed > 0 ? false : true;
 
   if (moveSpeed && player.body.touching.down) {
