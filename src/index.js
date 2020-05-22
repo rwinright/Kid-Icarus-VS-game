@@ -226,7 +226,7 @@ function update() {
 
 }
 
-
+// TODO: Refactor this thing too... Ew.
 function fireArrow(player, who) {
   if (player.active) {
     if (who === "p1") {
